@@ -2,7 +2,7 @@
 
 SQL Server, in particular. Shouldn't be difficult to support other databases.
 
-This listens to MQTT topics ad whenever it sees a message it logs the message, topic, and timestamp to a table in a database.
+This listens to MQTT topics and whenever it sees a message it logs the message, topic, and timestamp to a table in a database.
 
 ## Setup and run
 
@@ -23,7 +23,7 @@ Now edit the `appsettings.json`.
 I run this on my Debian 10 box that is on 24/7 and also does home routing, file sharing, DLNA, SQL Server, mqtt, etc. like this:
 ```
 # cd mqtt2sql
-# /usr/bin/screen -dm -S bf -L -Logfile /foot/mqtt/mqtt-screen.log dotnet run --project /root/mqtt/Mqtt2Sql.csproj
+# /usr/bin/screen -dm -S bf -L -Logfile /root/mqtt/mqtt-screen.log dotnet run --project /root/mqtt/Mqtt2Sql.csproj
 ```
 
 The table is created by an EF migration from the model class `` and looks like this:

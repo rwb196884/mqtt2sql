@@ -19,6 +19,7 @@ namespace Mqtt2Sql
         private static MqttFactory _F;
         private static IManagedMqttClient _C;
         private static Database _Db;
+        private static bool _Retained;
 
         private static MqttClientTlsOptions MqttClientTlsOptions = new MqttClientTlsOptions
         {
@@ -72,6 +73,7 @@ namespace Mqtt2Sql
                     _C.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(OnDisconnected);
                     //_C.ApplicationMessageProcessedHandler = new ApplicationMessageProcessedHandlerDelegate(MessageProcessedHandler);
                     _C.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(SubscriberMessageReceivedHandler);
+                    _Retained = true; // When we connect we'll get the retained message which we'll therefore give a bollocks timestamp to.
                     _C.StartAsync(new ManagedMqttClientOptions { ClientOptions = GetOptions("ClientPublisher") }).Wait();
                     _C.SubscribeAsync(topics.Select(z => new MqttTopicFilter { Topic = z })).Wait();
 
@@ -123,8 +125,16 @@ namespace Mqtt2Sql
                 Payload = args.ApplicationMessage.ConvertPayloadToString()
             };
 
+            if (_Retained)
+            {
+                _Retained = false;
+            }
+            else
+            {
+                _Db.Messages.Add(m);
+            }
+
             Console.WriteLine($"Timestamp: {m.Timestamp:HH:mm:ss} | Topic: {m.Topic} | Payload: {m.Payload} | QoS: {args.ApplicationMessage.QualityOfServiceLevel}");
-            _Db.Messages.Add(m);
         }
 
         private static void OnConnected(MqttClientConnectedEventArgs args)

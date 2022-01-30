@@ -132,6 +132,7 @@ namespace Mqtt2Sql
             else
             {
                 _Db.Messages.Add(m);
+                _Db.SaveChanges();
             }
 
             Console.WriteLine($"Timestamp: {m.Timestamp:HH:mm:ss} | Topic: {m.Topic} | Payload: {m.Payload} | QoS: {args.ApplicationMessage.QualityOfServiceLevel}");
@@ -143,6 +144,7 @@ namespace Mqtt2Sql
         }
         private static void OnDisconnected(MqttClientDisconnectedEventArgs args)
         {
+            _Retained = true;
             Console.WriteLine("Disconnected");
         }
     }

@@ -23,7 +23,26 @@ Now edit the `appsettings.json`.
 I run this on my Debian 10 box that is on 24/7 and also does home routing, file sharing, DLNA, SQL Server, mqtt, etc. like this:
 ```
 # cd mqtt2sql
-# /usr/bin/screen -dm -S bf -L -Logfile /root/mqtt/mqtt-screen.log dotnet run --project /root/mqtt/Mqtt2Sql.csproj
+# /usr/bin/screen -dm -S mqtt2sql -L -Logfile /opt/mqtt2sql/mqtt2sql-screen.log dotnet run --project /opt/mqtt2sql/Mqtt2Sql.csproj
+```
+(I keep it at `/opt` becase that's where custom stuff -- including SQL Server -- seems to go.)
+
+Or you could make it into a `systemd` service by creating `/etc/systemd/system`
+```
+[Unit]
+Description=mqtt2sql
+After=network.target
+
+[Service]
+ExecStart=dotnet run /opt/mqtt2sql/Mqtt2Sql.csproj
+WorkingDirectory=/opt/mqtt2sql
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+StandardOutput=file:/opt/mqtt2sql/service-logfile
+
+[Install]
+WantedBy=multi-user.target
 ```
 
 The table is created by an EF migration from the model class `` and looks like this:

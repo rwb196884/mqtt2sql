@@ -34,16 +34,18 @@ Description=mqtt2sql
 After=network.target
 
 [Service]
-ExecStart=dotnet run /opt/mqtt2sql/Mqtt2Sql.csproj
+ExecStart=dotnet run Mqtt2Sql.csproj
 WorkingDirectory=/opt/mqtt2sql
-StandardOutput=inherit
+Environment=DOTNET_CLI_HOME=/opt/mqtt2sql
+StandardOutput=file:/opt/mqtt2sql/service-logfile
 StandardError=inherit
 Restart=always
-StandardOutput=file:/opt/mqtt2sql/service-logfile
 
 [Install]
 WantedBy=multi-user.target
 ```
+
+(You might want to add `-no-build` to the `dotnet` command because building takes a while and you might remember to do it manually yourself whenever it's needed.)
 
 The table is created by an EF migration from the model class `` and looks like this:
 ```

@@ -27,7 +27,8 @@ I run this on my Debian 10 box that is on 24/7 and also does home routing, file 
 ```
 (I keep it at `/opt` becase that's where custom stuff -- including SQL Server -- seems to go.)
 
-Or you could make it into a `systemd` service by creating `/etc/systemd/system`
+Looks like more work is needed to [turn this C# application into a `systemd` service](https://devblogs.microsoft.com/dotnet/net-core-and-systemd/).
+If I had done that then this sort of malarkey could go into `/etc/systemd/system`
 ```
 [Unit]
 Description=mqtt2sql
